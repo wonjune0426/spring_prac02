@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css2?family=family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/basic.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <title>항해99 주특기 숙련주차</title>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            $('#updatebtn').hide();
+        })
+
+        function check(comment) {
+            if (comment=='') {
+                return false;
+            } else{
+                return true;
+            }
+        }
+
+        function commentwrite() {
+            let comment = $('#comment').val();
+            if(check(comment)==false){
+                alert("글을 입력해주세요");
+                return
+            }
+            let username = [[${username}]];
+            let postid = [[${post.id}]];
+            console.log(username, postid, comment);
+            let data = {"username": username, "postid": postid, "comment": comment};
+            $.ajax({
+                type: "post",
+                url: "/comment/write",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert("글이 작성되었습니다.")
+                    location.href = "/post/detail/" + postid;
+                }
+            });
+        }
+
+        function home() {
+            location.href = "/";
+        }
+
+        function updatecom() {
+            $('#delete').hide();
+            $('#updateb').hide();
+            $('#updatebtn').show();
+            $('#updateinput').attr('readonly', false);
+        }
+
+        function updatecomment() {
+            let comment = $('#updateinput').val();
+            let username = [[${username}]];
+            let postid = [[${post.id}]];
+            let data = {"postid": postid, "username": username, "comment": comment}
+            $.ajax({
+                type: "POST",
+                url: "/comment/update",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert("댓글이 수정되었습니다.");
+                    location.href = "/post/detail/" + postid;
+                },
+            });
+        }
+
+        function deletecomment() {
+            let username = [[${username}]];
+            let postid = [[${post.id}]];
+            let data = {"postid": postid, "username": username};
+            $.ajax({
+                type: "POST",
+                url: "/comment/delete",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert("댓글이 삭제되었습니다.");
+                    location.href = "/post/detail/" + postid;
+                },
+            });
+        }
+
+    </script>
+</head>
+<body>
+<div class="header" style="position:relative;">
+    <div id="header-title-select-shop">
+        댓글을 남겨주세요<br>
+    </div>
+    <button onclick="home()">Home</button>
+</div>
+<div class="writemodal">
+    <div class="mb-3">
+        <label for="title" class="form-label">제목</label>
+        <br>
+        <input class="form-control" type="text" id="title" name="title" th:value="${post.title}" readonly>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">내용</label>
+        <textarea class="form-control" th:text="${post.contents}" rows="5" id="contents" name="contents"
+                  style="width: 500px;resize: none" readonly></textarea>
+    </div>
+</div>
+<div th:if="${username!=null}" class="writemodal">
+    <div class="mb-3">
+        <label for="title" class="form-label">댓글</label>
+        <br>
+        <input class="form-control" type="text" id="comment" name="comment" style="width:480px" autocomplete="off">
+    </div>
+    <br>
+    <div>
+        <button style="color:black;width: 100px;height: 40px" onclick="commentwrite()">댓글작성</button>
+    </div>
+</div>
+<div class="commentlist" th:each="comment:${commentList}">
+    <br>
+    <div th:text="${comment.username}" style="margin: auto 30px;font-size:20px"></div>
+    <div th:text="${comment.createdAt}" class="date" style="margin:auto 30px">
+    </div>
+    <div style="margin: auto 30px;font-size:20px">
+        <input type="text" style="width: 300px" th:value="${comment.comment}" id="updateinput" readonly>
+    </div>
+
+    <div th:if="${comment.username}==${username}" style="margin: auto 40px">
+        <button style="color:black" onclick="updatecom()" id="updateb">수정</button>
+        <button style="color:black" onclick="updatecomment()" id="updatebtn">수정완료</button>
+        <button style="color:black" onclick="deletecomment()" id="delete">삭제</button>
+    </div>
+</div>
+</body>
+</html>

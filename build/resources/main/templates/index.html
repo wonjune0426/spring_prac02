@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta property="og:title" content="00만의 셀렉샵">
+    <meta property="og:description" content="관심상품을 선택하고, 최저가 알림을 확인해보세요!">
+    <meta property="og:image" content="images/og_selectshop.png">
+    <link href="https://fonts.googleapis.com/css2?family=family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/basic.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <title>항해99 주특기 숙련주차</title>
+</head>
+<body>
+<div class="header" style="position:relative;">
+    <div th:if="${username!=null}" id="header-title-login-shop">
+        <span th:text="${username}"></span>님
+    </div>
+    <div id="header-title-select-shop">
+        메모를 남겨주세요 <br>
+        <button th:if="${username!=null}" style="color:black;width: 150px;height: 40px" onclick="location.href='/post/write'">글쓰기</button>
+    </div>
+    <span th:if="${username==null}">로그인이 필요합니다.</span>
+    <br>
+
+
+
+    <form th:if="${username!=null}" id="my_form" method="post" action="/user/logout">
+        <a id="logout-text" href="javascript:{}" onclick="document.getElementById('my_form').submit();">로그아웃</a>
+    </form>
+        <a th:if="${username==null}" id="login-text" href="/user/login">로그인</a>
+</div>
+<div class="postlist" th:each="post:${postlist}">
+    <br>
+    <div th:text="${post.writer}" style="margin: auto 30px;font-size:20px"></div>
+    <div th:text="${post.createdAt}"class="date" style="margin:auto 30px">
+    </div>
+    <div style="margin: auto 30px;font-size:40px">
+        <a th:text="${post.title}" th:href="@{/post/detail/{id}(id=${post.id})}"></a>
+    </div>
+</div>
+</body>
+</html>

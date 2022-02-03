@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta property="og:title" content="00만의 셀렉샵">
+    <meta property="og:description" content="관심상품을 선택하고, 최저가 알림을 확인해보세요!">
+    <meta property="og:image" content="images/og_selectshop.png">
+    <link href="https://fonts.googleapis.com/css2?family=family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/basic.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+    <title>항해99 주특기 숙련주차</title>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            if ([[${username}]] == null) {
+                alert("로그인해주세요");
+                location.href = "/";
+            }
+        })
+
+        function home(){
+            location.href="/";
+        }
+    </script>
+</head>
+<body>
+<div class="header" style="position:relative;">
+    <div id="header-title-select-shop">
+        메모를 남겨주세요 <br>
+    </div>
+    <button onclick="home()">Home</button>
+</div>
+<form action="/post/postwrite" method="post">
+    <div class="writemodal">
+        <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <br>
+            <input th:value="${title}" class="form-control" type="text" id="title" name="title">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">내용</label>
+            <textarea th:text="${contents}" class="form-control" rows="5" id="contents" name="contents" style="width: 500px;resize: none"></textarea>
+        </div>
+        <button style="color:black;width: 150px;height: 40px">작성완료</button>
+        <p th:if="${error}!=null" th:text="${error}" style="color: red"></p>
+    </div>
+</form>
+</body>
+</html>
