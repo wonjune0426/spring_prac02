@@ -49,7 +49,9 @@ public class PostController {
         Post post=postService.getPostdetail(id);
         model.addAttribute("post",post);
         model.addAttribute("commentList",commentService.getComment(id));
-        model.addAttribute("username",userDetails.getUsername());
+        if(userDetails!=null) {
+            model.addAttribute("username", userDetails.getUsername());
+        }
         return "detail";
     }
 }
